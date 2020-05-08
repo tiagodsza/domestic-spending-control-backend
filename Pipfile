@@ -5,10 +5,16 @@ verify_ssl = true
 
 [dev-packages]
 pytest = "*"
+pytest-cov = "*"
 
 [packages]
 fastapi = "*"
 uvicorn = "*"
+sqlalchemy = "*"
+psycopg2 = "*"
+alembic = "*"
+packagename = {editable = true,path = "."}
+postgresql = "*"
 
 [requires]
 python_version = "3.8"
