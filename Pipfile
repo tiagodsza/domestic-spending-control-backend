@@ -14,7 +14,7 @@ sqlalchemy = "*"
 psycopg2 = "*"
 alembic = "*"
 packagename = {editable = true,path = "."}
-postgresql = "*"
+pg8000 = "*"
 
 [requires]
 python_version = "3.8"
