@@ -5,8 +5,16 @@ verify_ssl = true
 
 [dev-packages]
 pytest = "*"
+pytest-cov = "*"
 
 [packages]
+fastapi = "*"
+uvicorn = "*"
+sqlalchemy = "*"
+psycopg2 = "*"
+alembic = "*"
+packagename = {editable = true,path = "."}
+pg8000 = "*"
 
 [requires]
 python_version = "3.8"
