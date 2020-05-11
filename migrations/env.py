@@ -10,7 +10,7 @@ from app.core.config import DATABASE_URL
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
-from app.core.database.config import DeclarativeBase
+from app.core.database import DeclarativeBase
 
 sys.path.append(os.getcwd())
 config = context.config
