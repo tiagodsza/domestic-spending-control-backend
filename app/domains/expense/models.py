@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Float, DateTime
 
-from app.core.database.config import DeclarativeBase
+from app.core.database import DeclarativeBase
 from app.core.database.models import AbstractModel
 
 

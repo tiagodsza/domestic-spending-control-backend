@@ -1,6 +1,6 @@
 # from unittest import TestCase
 #
-# from app.domains.expense_model.models import Expense
+# from app.domains.expense.models import Expense
 #
 #
 # class TestExpenseModel(TestCase):

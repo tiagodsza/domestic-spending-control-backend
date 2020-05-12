@@ -20,7 +20,7 @@ config = context.config
 fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
-from app.domains.expense_model.models import Expense
+from app.domains.expense.models import Expense
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata

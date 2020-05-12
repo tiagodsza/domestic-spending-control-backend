@@ -8,7 +8,7 @@ from app.utils.date_time import generate_datetime_now
 class AbstractModel(object):
     id = Column(
         String(length=36),
-        default=lambda: uuid4(),
+        default=lambda: str(uuid4()),
         primary_key=True,
     )
     created_at = Column(DateTime, default=lambda: generate_datetime_now())
