@@ -32,11 +32,10 @@ class TestRepository(TestCase):
             call.close(),
         ])
 
-    @patch('app.core.database.repository.SessionLocal')
+    @patch('app.core.database.repository.Repository')
     def test_get_repository(
             self,
             repository_mock,
-            session_local_mock,
     ):
         #Arrange
         repository_instance_mock = Mock()
