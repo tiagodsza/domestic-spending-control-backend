@@ -10,7 +10,7 @@ DeclarativeBase = declarative_base()
 def _build_engine(**kwargs) -> Engine:
     return sqlalchemy.create_engine(config.DATABASE_URL, **kwargs)
 
-engine = _build_engine(pool_size=5, max_overflow=1)
+engine = _build_engine(pool_size=5)
 
 SessionLocal = sessionmaker(
     autocommit=False,
