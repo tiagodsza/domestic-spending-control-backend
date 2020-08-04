@@ -22,6 +22,9 @@ class Repository:
     def get(self, model):
         return self._db.query(model)
 
+    def get_by_id(self, model, id):
+        return self._db.query(model).get(id)
+
 def get_repository():
     repository = Repository()
     repository.set_db(SessionLocal())

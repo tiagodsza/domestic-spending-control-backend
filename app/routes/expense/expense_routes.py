@@ -31,3 +31,11 @@ def get(
 ):
     response = repository.get(Expense)
     return response.all()
+
+@router.get('/{id}')
+def get(
+        id,
+        repository: Repository = Depends(get_repository)
+):
+    response = repository.get_by_id(Expense, id)
+    return response
