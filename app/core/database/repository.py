@@ -19,6 +19,8 @@ class Repository:
         self._db.refresh(model)
         self._db.close()
 
+    def get(self, model):
+        return self._db.query(model)
 
 def get_repository():
     repository = Repository()

@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from starlette.status import HTTP_201_CREATED
 
 from app.core.database.repository import get_repository, Repository
+from app.domains.expense.models import Expense
 from app.domains.expense.usecase import CreateExpenseUseCase
 from app.routes.expense.expense_request import CreateExpenseRequest
 
@@ -24,6 +25,9 @@ async def post(
     )
     return response
 
-@router.get('/message')
-def get():
-    return {'message':'Get works!'}
+@router.get('/')
+def get(
+        repository: Repository = Depends(get_repository)
+):
+    response = repository.get(Expense)
+    return response.all()
