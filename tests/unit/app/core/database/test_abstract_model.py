@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from app.core.database.models import AbstractModel
+from app.database import AbstractModel
 
 
 class Example(AbstractModel):

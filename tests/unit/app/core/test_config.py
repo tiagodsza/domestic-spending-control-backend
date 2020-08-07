@@ -1,7 +1,6 @@
 from unittest import TestCase
 
-from app.core import config
-from app.core.config import DATABASE_URL
+from config import DATABASE_URL
 
 
 class TestConfig(TestCase):

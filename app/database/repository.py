@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from app.core.database import SessionLocal
+from app.database import SessionLocal
 
 
 class Repository:
@@ -24,6 +24,9 @@ class Repository:
 
     def get_by_id(self, model, id):
         return self._db.query(model).get(id)
+
+    def close(self):
+        self._db.close()
 
 def get_repository():
     repository = Repository()

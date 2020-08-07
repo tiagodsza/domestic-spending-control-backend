@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import patch, Mock, call
 
-from app.core.database.repository import Repository, get_repository
+from app.database.repository import Repository, get_repository
 
 
 class TestRepository(TestCase):

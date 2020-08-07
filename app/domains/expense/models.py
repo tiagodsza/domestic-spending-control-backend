@@ -1,12 +1,11 @@
 from sqlalchemy import Column, String, Float, DateTime
 
-from app.core.database import DeclarativeBase
-from app.core.database.models import AbstractModel
-
+from app.database import DeclarativeBase
+from app.database.models import AbstractModel
 
 
 class Expense(AbstractModel, DeclarativeBase):
-    __tablename__='expense'
+    __tablename__ = 'expense'
 
     name = Column(String(64), nullable=False)
     amount = Column(Float, nullable=False)
@@ -15,3 +14,9 @@ class Expense(AbstractModel, DeclarativeBase):
 
     def __init__(self, **kwargs):
         super(Expense, self).__init__(**kwargs)
+
+    def update(self, request):
+        self.name = request.name
+        self.amount = request.amount
+        self.date = request.date
+        self.place = request.place
