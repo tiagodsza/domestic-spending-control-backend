@@ -1,9 +1,7 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from starlette.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_200_OK
 
-from app.database.repository import get_repository, Repository
-from app.domains.expense.models import Expense
-from app.domains.expense.actions import create_expense, update_expense, delete_expense
+from app.domains.expense.actions import create_expense, update_expense, delete_expense, get_expense_by_id, get_expenses
 from app.routes.expense.expense_request import CreateExpenseRequest
 
 router = APIRouter()
@@ -20,21 +18,16 @@ def post(
 
 
 @router.get('/', status_code=HTTP_200_OK)
-def get(
-        repository: Repository = Depends(get_repository)
-):
-    response = repository.get(Expense)
-    repository.close()
-    return response.all()
+def get():
+    response = get_expenses()
+    return response
 
 
 @router.get('/{id}', status_code=HTTP_200_OK)
-def get(
+def get_by_id(
         id: str,
 ):
-    repository = get_repository()
-    response = repository.get_by_id(Expense, id)
-    repository.close()
+    response = get_expense_by_id(id)
     return response
 
 

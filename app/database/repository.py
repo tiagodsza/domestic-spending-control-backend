@@ -20,13 +20,18 @@ class Repository:
         self._db.close()
 
     def get(self, model):
-        return self._db.query(model)
+        response = self._db.query(model)
+        self.close()
+        return response
 
     def get_by_id(self, model, id):
-        return self._db.query(model).get(id)
+        response = self._db.query(model).get(id)
+        self.close()
+        return response
 
     def close(self):
         self._db.close()
+
 
 def get_repository():
     repository = Repository()
