@@ -23,5 +23,4 @@ class AbstractModel(object):
     )
 
     def delete(self):
-        print(generate_datetime_now())
         self.deleted_at = generate_datetime_now()

@@ -32,7 +32,31 @@ class TestRepository(TestCase):
             call.close(),
         ])
 
-    @patch('app.core.database.repository.Repository')
+    def test_close_must_call_the_close(self):
+        #Arrange
+        db_mock = Mock()
+        repository = Repository()
+        repository.set_db(db_mock)
+
+        #Action
+        repository.close()
+
+        #Asserts
+        db_mock_calls = db_mock.mock_calls
+        self.assertEqual(1, len(db_mock_calls))
+        db_mock.assert_has_calls([
+            call.close()
+        ])
+
+    # def test_get_must_call_query_and_close(self):
+    #     #Arrange
+    #
+    #     #Action
+    #
+    #     #Asserts
+
+
+    @patch('app.database.repository.Repository')
     def test_get_repository(
             self,
             repository_mock,
