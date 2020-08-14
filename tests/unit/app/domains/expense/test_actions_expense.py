@@ -1,6 +1,9 @@
 from unittest import TestCase
 from unittest.mock import Mock, patch, call
 
+import pytest
+from fastapi import HTTPException
+
 from app.domains.expense.actions import create_expense, update_expense, delete_expense, get_expense_by_id, get_expenses
 from app.domains.expense.models import Expense
 
@@ -121,8 +124,25 @@ class TestActionsExpense(TestCase):
             call()
         ])
 
-    def test_delete_must_raise_exception_when_the_verify_is_false(self):
-        self.assertEqual(1,2)
+    @patch('app.domains.expense.actions.get_repository')
+    @patch('app.domains.expense.actions.verify_if_exists_and_is_not_deleted')
+    def test_delete_must_raise_exception_when_the_verify_is_false(
+            self,
+            verify_if_exists_and_is_not_deleted_mock,
+            get_repository_mock
+    ):
+        #Arrange
+        verify_if_exists_and_is_not_deleted_mock.return_value = False
+        repository_mock = Mock()
+        get_repository_mock.return_value = repository_mock
+
+        #Action
+        with pytest.raises(HTTPException) as ex:
+            delete_expense('id')
+
+        #Asserts
+        self.assertEqual(ex.value.status_code, 404)
+
 
     @patch('app.domains.expense.actions.verify_if_exists_and_is_not_deleted')
     @patch('app.domains.expense.actions.get_repository')
@@ -161,8 +181,22 @@ class TestActionsExpense(TestCase):
             call()
         ])
 
-    def test_expense_by_id_must_raise_exception_when_the_verify_is_False(self):
-        self.assertEqual(1, 2)
+    @patch('app.domains.expense.actions.get_repository')
+    @patch('app.domains.expense.actions.verify_if_exists_and_is_not_deleted')
+    def test_expense_by_id_must_raise_exception_when_the_verify_is_False(
+            self,
+            verify_if_exists_and_is_not_deleted_mock,
+            get_repository_mock
+    ):
+        #Arrange
+        verify_if_exists_and_is_not_deleted_mock.return_value = False
+
+        #Action
+        with pytest.raises(HTTPException) as ex:
+            get_expense_by_id('id')
+
+        #Asserts
+        self.assertEqual(ex.value.status_code, 404)
 
     @patch('app.domains.expense.actions.verify_if_exists_and_is_not_deleted')
     @patch('app.domains.expense.actions.get_repository')
