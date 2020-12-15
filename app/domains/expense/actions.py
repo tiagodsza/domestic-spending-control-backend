@@ -13,7 +13,6 @@ def create_expense(
     repository = get_repository()
     expense = request.to_domain()
     repository.save(expense)
-    repository.close()
     return ExpenseResponse.from_domain(expense)
 
 
@@ -25,7 +24,6 @@ def update_expense(
     expense = repository.get_by_id(Expense, id)
     expense.update(request)
     repository.save(expense)
-    repository.close()
     return ExpenseResponse.from_domain(expense)
 
 

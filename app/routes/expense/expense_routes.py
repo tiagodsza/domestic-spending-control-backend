@@ -25,7 +25,7 @@ def get():
 
 @router.get('/{id}', status_code=HTTP_200_OK)
 def get_by_id(
-        id: str,
+        id:str,
 ):
     response = get_expense_by_id(id)
     return response
@@ -33,7 +33,7 @@ def get_by_id(
 
 @router.put('/{id}', status_code=HTTP_200_OK)
 def update(
-        id,
+        id: str,
         request: CreateExpenseRequest,
 ):
     response = update_expense(

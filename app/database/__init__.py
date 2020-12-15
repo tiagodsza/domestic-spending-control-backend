@@ -7,10 +7,10 @@ import config
 
 DeclarativeBase = declarative_base()
 
-DATABASE_URL = f'postgresql://{config.DATABASE_USER}:{config.DATABASE_PASSWORD}@localhost:5432/postgres'
+
 
 def _build_engine(**kwargs) -> Engine:
-    return sqlalchemy.create_engine(DATABASE_URL, **kwargs)
+    return sqlalchemy.create_engine(config.URL_DB, **kwargs)
 
 engine = _build_engine(pool_size=5)
 

@@ -32,8 +32,13 @@ class Repository:
     def close(self):
         self._db.close()
 
+def create_repository():
+    try:
+        repository = Repository()
+        repository.set_db(SessionLocal())
+        yield repository
+    finally:
+        repository.close()
 
 def get_repository():
-    repository = Repository()
-    repository.set_db(SessionLocal())
-    return repository
+    return next(create_repository())

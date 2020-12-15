@@ -8,8 +8,8 @@ from alembic import context
 import os
 import sys
 
-from config import DATABASE_URL
-from app.database import DeclarativeBase
+
+from app.database import DeclarativeBase, DATABASE_URL
 
 sys.path.append(os.getcwd())
 

@@ -1,16 +1,34 @@
-from sqlalchemy import Column, String, Float, DateTime
+from typing import Final
 
+from sqlalchemy import Column, String, Float, DateTime, ForeignKey, Integer, Enum
+import enum
 from app.database import DeclarativeBase
 from app.database.models import AbstractModel
 
+class Month(str, enum.Enum):
+    January: Final[str] = 'January'
+    February: Final[str] = 'February'
+    March: Final[str] = 'March'
+    April: Final[str] = 'April'
+    May: Final[str] = 'May'
+    June: Final[str] = 'June'
+    July: Final[str] = 'July'
+    August: Final[str] = 'August'
+    September: Final[str] = 'September'
+    October: Final[str] = 'October'
+    November: Final[str] = 'November'
+    December: Final[str] = 'December'
 
 class Expense(AbstractModel, DeclarativeBase):
-    __tablename__ = 'expense'
+    __tablename__ = 'expenses'
 
     name = Column(String(64), nullable=False)
     amount = Column(Float, nullable=False)
     date = Column(DateTime, nullable=True)
     place = Column(String(124), nullable=True)
+    month = Column(Enum(Month, name='month'))
+    type_id = Column(String(36), ForeignKey('types.id'), nullable=True)
+
 
     def __init__(self, **kwargs):
         super(Expense, self).__init__(**kwargs)
@@ -20,3 +38,6 @@ class Expense(AbstractModel, DeclarativeBase):
         self.amount = request.amount
         self.date = request.date
         self.place = request.place
+        self.month = request.month
+        self.type_id = request.type_id
+
