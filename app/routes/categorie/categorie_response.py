@@ -19,8 +19,8 @@ class CategorieResponse(BaseModel):
         return CategorieResponse(
             id = data.id ,
             created_at = data.created_at ,
-            updated_at = data.updated_at ,
-            deleted_at = data.deleted_at ,
+            updated_at = data.updated_at or None ,
+            deleted_at = data.deleted_at or None,
             name = data.name ,
-            color = data.color ,
+            color = data.color or None,
         )

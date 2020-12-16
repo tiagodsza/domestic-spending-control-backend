@@ -15,6 +15,7 @@ uvicorn = "*"
 sqlalchemy = "*"
 psycopg2 = "*"
 alembic = "*"
+requests = "*"
 
 [requires]
 python_version = "3.8"
