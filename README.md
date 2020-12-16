@@ -10,3 +10,6 @@ Configurar variáveis de ambiente com:
     DATABASE_USER
     DATABASE_PASSWORD
     PORT
+    
+    
+    

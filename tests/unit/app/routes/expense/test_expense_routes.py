@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 from asynctest import TestCase, patch
 from unittest.mock import call
 
@@ -15,11 +15,10 @@ class TestExpenseRoutes(TestCase):
         #Arrange
         data = {
               "name": "string",
-              "amount": 0,
-              "date": "2020-12-15 00:00:00",
+              "amount": 1,
+              "date": "2020-12-15",
               "place": "string",
-              "categorie_id": "null",
-              "month": "January"
+              "categorie_id": None,
             }
         create_expense_mock.return_value = 'response'
 
@@ -34,11 +33,10 @@ class TestExpenseRoutes(TestCase):
         create_expense_mock.assert_has_calls([
             call(request=CreateExpenseRequest(
                 name='string',
-                amount=0.0,
-                date=datetime(2020, 12, 15, 0, 0, 0),
+                amount=1,
+                date=datetime.date(2020, 12, 15),
                 place='string',
-                categorie_id='null',
-                month='January'))
+                categorie_id=None))
         ])
 
     @patch('app.routes.expense.expense_routes.get_expenses')
@@ -75,7 +73,7 @@ class TestExpenseRoutes(TestCase):
         data = {
           "name": "string",
           "amount": 15.5,
-          "date": "2020-12-15 00:00:00",
+          "date": "2020-12-15",
           "place": "string",
           "categorie_id": "null",
           "month": "January"
@@ -96,7 +94,7 @@ class TestExpenseRoutes(TestCase):
                 request=CreateExpenseRequest(
                     name='string',
                     amount=15.5,
-                    date=datetime(2020, 12, 15, 0, 0),
+                    date=datetime.date(2020, 12, 15),
                     place='string',
                     categorie_id='null',
                     month='January'

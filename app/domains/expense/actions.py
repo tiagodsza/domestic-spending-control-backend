@@ -2,6 +2,7 @@ from fastapi import HTTPException
 
 from app.database.repository import get_repository
 from app.domains.expense.models import Expense
+from app.exceptions.exceptions import NotFoundException
 from app.routes.expense.expense_request import CreateExpenseRequest
 from app.routes.expense.expense_response import ExpenseResponse
 from app.utils.utils import verify_if_exists_and_is_not_deleted
@@ -31,7 +32,7 @@ async def delete_expense(id: str):
     repository = await get_repository()
     expense = repository.get_by_id(Expense, id)
     if not verify_if_exists_and_is_not_deleted(expense):
-        raise HTTPException(status_code=404)
+        raise NotFoundException()
     expense.delete()
     repository.save(expense)
 
@@ -39,7 +40,7 @@ async def get_expense_by_id(id: str):
     repository = await get_repository()
     response = repository.get_by_id(Expense, id)
     if not verify_if_exists_and_is_not_deleted(response):
-        raise HTTPException(status_code=404)
+        raise NotFoundException()
     return response
 
 async def get_expenses():
