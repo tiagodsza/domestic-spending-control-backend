@@ -1,14 +1,14 @@
 from pydantic import BaseModel
 
-from app.domains.type.models import Type
+from app.domains.categorie.models import Categorie
 
 
-class CreateTypeRequest(BaseModel):
+class CreateCategorieRequest(BaseModel):
     name: str
     color: str = None
 
     def to_domain(self):
-        return Type(
+        return Categorie(
             name=self.name,
             color=self.color,
         )

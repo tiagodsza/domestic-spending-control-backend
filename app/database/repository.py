@@ -40,5 +40,5 @@ def create_repository():
     finally:
         repository.close()
 
-def get_repository():
+async def get_repository():
     return next(create_repository())

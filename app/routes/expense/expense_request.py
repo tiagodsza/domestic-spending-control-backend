@@ -8,7 +8,7 @@ class CreateExpenseRequest(BaseModel):
     amount: float
     date: datetime = None
     place: str = None
-    type_id: str = None
+    categorie_id: str = None
     month: str
 
     def to_domain(self):
@@ -17,7 +17,7 @@ class CreateExpenseRequest(BaseModel):
             amount=self.amount,
             date=self.date,
             place=self.place,
-            type_id=self.type_id,
+            categorie_id=self.categorie_id,
             month=self.month,
         )
 

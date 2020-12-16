@@ -9,7 +9,8 @@ import os
 import sys
 
 
-from app.database import DeclarativeBase, DATABASE_URL
+from app.database import DeclarativeBase
+from config import URL_DB
 
 sys.path.append(os.getcwd())
 
@@ -47,7 +48,7 @@ def run_migrations_offline():
     """
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=DATABASE_URL,
+        url=URL_DB,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -65,7 +66,7 @@ def run_migrations_online():
 
     """
     configuration = config.get_section(config.config_ini_section)
-    configuration['sqlalchemy.url'] = DATABASE_URL
+    configuration['sqlalchemy.url'] = URL_DB
     connectable = engine_from_config(
         configuration,
         prefix="sqlalchemy.",

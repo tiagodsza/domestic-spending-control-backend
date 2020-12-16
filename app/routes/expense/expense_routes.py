@@ -8,35 +8,35 @@ router = APIRouter()
 
 
 @router.post('/', status_code=HTTP_201_CREATED)
-def post(
+async def post(
         request: CreateExpenseRequest,
 ):
-    response = create_expense(
+    response = await create_expense(
         request=request
     )
     return response
 
 
 @router.get('/', status_code=HTTP_200_OK)
-def get():
-    response = get_expenses()
+async def get():
+    response = await get_expenses()
     return response
 
 
 @router.get('/{id}', status_code=HTTP_200_OK)
-def get_by_id(
+async def get_by_id(
         id:str,
 ):
-    response = get_expense_by_id(id)
+    response = await get_expense_by_id(id)
     return response
 
 
 @router.put('/{id}', status_code=HTTP_200_OK)
-def update(
+async def update(
         id: str,
         request: CreateExpenseRequest,
 ):
-    response = update_expense(
+    response = await update_expense(
         id=id,
         request=request
     )
@@ -44,5 +44,5 @@ def update(
 
 
 @router.delete('/{id}', status_code=HTTP_204_NO_CONTENT)
-def delete(id: str):
-    delete_expense(id=id)
+async def delete(id: str):
+    await delete_expense(id=id)

@@ -27,7 +27,7 @@ class Expense(AbstractModel, DeclarativeBase):
     date = Column(DateTime, nullable=True)
     place = Column(String(124), nullable=True)
     month = Column(Enum(Month, name='month'))
-    type_id = Column(String(36), ForeignKey('types.id'), nullable=True)
+    categorie_id = Column(String(36), ForeignKey('categories.id'), nullable=True)
 
 
     def __init__(self, **kwargs):
@@ -39,5 +39,5 @@ class Expense(AbstractModel, DeclarativeBase):
         self.date = request.date
         self.place = request.place
         self.month = request.month
-        self.type_id = request.type_id
+        self.categorie_id = request.categorie_id
 
