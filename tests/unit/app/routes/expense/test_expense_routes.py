@@ -1,11 +1,11 @@
-from unittest import TestCase
+from asynctest import TestCase
 
 from app.routes.expense.expense_request import CreateExpenseRequest
 
 
 class TestCreateExpenseRequest(TestCase):
 
-    def test_if_the_request_is_created(self):
+    async def test_if_the_request_is_created(self):
         #Arrange
         request = CreateExpenseRequest()
         request.name = 'Leite'

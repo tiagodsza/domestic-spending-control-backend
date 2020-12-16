@@ -1,4 +1,4 @@
-from unittest import TestCase
+from asynctest import TestCase
 from unittest.mock import Mock, patch, call
 
 import pytest
@@ -12,7 +12,7 @@ class TestActionsExpense(TestCase):
 
     @patch('app.domains.expense.actions.ExpenseResponse')
     @patch('app.domains.expense.actions.get_repository')
-    def test_create_expense_must_receive_a_request_and_return_a_response(
+    async def test_create_expense_must_receive_a_request_and_return_a_response(
             self,
             get_repository_mock,
             expense_response_mock
@@ -25,15 +25,14 @@ class TestActionsExpense(TestCase):
         expense_response_mock.from_domain.return_value = 'expense_response'
 
         #Action
-        response = create_expense(request_mock)
+        response = await create_expense(request_mock)
 
         #Asserts
         self.assertEqual(response, 'expense_response')
         repository_mock_calls = repository_mock.mock_calls
-        self.assertEqual(len(repository_mock_calls), 2)
+        self.assertEqual(len(repository_mock_calls), 1)
         repository_mock.assert_has_calls([
             call.save('expense'),
-            call.close()
         ])
 
         request_mock_calls = request_mock.mock_calls
@@ -51,7 +50,7 @@ class TestActionsExpense(TestCase):
 
     @patch('app.domains.expense.actions.ExpenseResponse')
     @patch('app.domains.expense.actions.get_repository')
-    def test_update_expense(
+    async def test_update_expense(
             self,
             get_repository_mock,
             expense_response_mock,
@@ -64,16 +63,15 @@ class TestActionsExpense(TestCase):
         expense_response_mock.from_domain.return_value = 'expense_response'
 
         #Action
-        response = update_expense('id', 'request')
+        response = await update_expense('id', 'request')
 
         #Asserts
         self.assertEqual(response, 'expense_response')
         repository_mock_calls = repository_mock.mock_calls
-        self.assertEqual(len(repository_mock_calls), 3)
+        self.assertEqual(len(repository_mock_calls), 2)
         repository_mock.assert_has_calls([
             call.get_by_id(Expense, 'id'),
             call.save(expense_mock),
-            call.close()
         ])
         expense_mock_calls = expense_mock.mock_calls
         self.assertEqual(len(expense_mock_calls), 1)
@@ -89,7 +87,7 @@ class TestActionsExpense(TestCase):
 
     @patch('app.domains.expense.actions.verify_if_exists_and_is_not_deleted')
     @patch('app.domains.expense.actions.get_repository')
-    def test_delete_expense(
+    async def test_delete_expense(
             self,
             get_repository_mock,
             verify_if_exists_and_is_not_deleted_mock
@@ -102,7 +100,7 @@ class TestActionsExpense(TestCase):
         repository_mock.get_by_id = Mock(return_value=expense_mock)
 
         #Action
-        delete_expense('id')
+        await delete_expense('id')
 
         #Asserts
         repository_mock_calls = repository_mock.mock_calls
@@ -126,7 +124,7 @@ class TestActionsExpense(TestCase):
 
     @patch('app.domains.expense.actions.get_repository')
     @patch('app.domains.expense.actions.verify_if_exists_and_is_not_deleted')
-    def test_delete_must_raise_exception_when_the_verify_is_false(
+    async def test_delete_must_raise_exception_when_the_verify_is_false(
             self,
             verify_if_exists_and_is_not_deleted_mock,
             get_repository_mock
@@ -138,7 +136,7 @@ class TestActionsExpense(TestCase):
 
         #Action
         with pytest.raises(HTTPException) as ex:
-            delete_expense('id')
+            await delete_expense('id')
 
         #Asserts
         self.assertEqual(ex.value.status_code, 404)
@@ -146,7 +144,7 @@ class TestActionsExpense(TestCase):
 
     @patch('app.domains.expense.actions.verify_if_exists_and_is_not_deleted')
     @patch('app.domains.expense.actions.get_repository')
-    def test_get_expense_by_id(
+    async def test_get_expense_by_id(
             self,
             get_repository_mock,
             verify_if_exists_and_is_not_deleted_mock,
@@ -158,7 +156,7 @@ class TestActionsExpense(TestCase):
         get_repository_mock.side_effect = [repository_mock]
 
         #Action
-        response = get_expense_by_id('id')
+        response = await get_expense_by_id('id')
 
         #Asserts
         self.assertEqual(response, 'response')
@@ -183,7 +181,7 @@ class TestActionsExpense(TestCase):
 
     @patch('app.domains.expense.actions.get_repository')
     @patch('app.domains.expense.actions.verify_if_exists_and_is_not_deleted')
-    def test_expense_by_id_must_raise_exception_when_the_verify_is_False(
+    async def test_expense_by_id_must_raise_exception_when_the_verify_is_False(
             self,
             verify_if_exists_and_is_not_deleted_mock,
             get_repository_mock
@@ -193,14 +191,14 @@ class TestActionsExpense(TestCase):
 
         #Action
         with pytest.raises(HTTPException) as ex:
-            get_expense_by_id('id')
+            await get_expense_by_id('id')
 
         #Asserts
         self.assertEqual(ex.value.status_code, 404)
 
     @patch('app.domains.expense.actions.verify_if_exists_and_is_not_deleted')
     @patch('app.domains.expense.actions.get_repository')
-    def test_get_expenses(
+    async def test_get_expenses(
             self,
             get_repository_mock,
             verify_if_exists_and_is_not_deleted_mock,
@@ -214,7 +212,7 @@ class TestActionsExpense(TestCase):
         response_mock.all.return_value = ['item1', 'item2', 'item3']
 
         #Action
-        response = get_expenses()
+        response = await get_expenses()
 
         #Asserts
         self.assertEqual(response, ['item1', 'item2'])

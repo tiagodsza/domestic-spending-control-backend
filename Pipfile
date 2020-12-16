@@ -6,6 +6,8 @@ verify_ssl = true
 [dev-packages]
 pytest = "*"
 pytest-cov = "*"
+asynctest = "*"
+v = {editable = true,version = "*"}
 
 [packages]
 fastapi = "*"

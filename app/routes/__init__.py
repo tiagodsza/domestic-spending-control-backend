@@ -12,6 +12,6 @@ api_router.include_router(
 
 api_router.include_router(
     categorie_routes.router,
-    prefix='/types',
-    tags=['types'],
+    prefix='/categories',
+    tags=['categories'],
 )

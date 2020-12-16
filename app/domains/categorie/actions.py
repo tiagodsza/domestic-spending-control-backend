@@ -3,8 +3,8 @@ from app.routes.categorie.categorie_request import CreateCategorieRequest
 from app.routes.categorie.categorie_response import CategorieResponse
 
 
-def create_categorie(request: CreateCategorieRequest):
-    repository = get_repository()
+async def create_categorie(request: CreateCategorieRequest):
+    repository = await get_repository()
     type = request.to_domain()
     repository.save(type)
     repository.close()

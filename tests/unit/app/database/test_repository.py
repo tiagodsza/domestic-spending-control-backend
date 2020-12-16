@@ -1,4 +1,4 @@
-from unittest import TestCase
+from asynctest import TestCase
 from unittest.mock import patch, Mock, call
 
 from app.database.repository import Repository, get_repository
@@ -89,7 +89,7 @@ class TestRepository(TestCase):
 
 
     @patch('app.database.repository.Repository')
-    def test_get_repository(
+    async def test_get_repository(
             self,
             repository_mock,
     ):
@@ -98,14 +98,13 @@ class TestRepository(TestCase):
         repository_mock.return_value = repository_instance_mock
 
         #Action
-        repository = get_repository()
-        print(repository)
+        repository = await get_repository()
 
         #Asserts
         self.assertEqual(repository_instance_mock, repository)
 
         repository_mock_calls = repository_mock.mock_calls
-        self.assertEqual(len(repository_mock_calls), 2)
+        self.assertEqual(len(repository_mock_calls), 3)
 
         repository_instance_mock_calls= repository_instance_mock.mock_calls
-        self.assertEqual(len(repository_instance_mock_calls), 1)
+        self.assertEqual(len(repository_instance_mock_calls), 2)
