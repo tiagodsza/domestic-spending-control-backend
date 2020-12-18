@@ -46,8 +46,4 @@ async def get_expense_by_id(id: str):
 async def get_expenses():
     repository = await get_repository()
     response = repository.get(Expense)
-    expenses = []
-    for expense in response.all():
-        if verify_if_exists_and_is_not_deleted(expense):
-           expenses.append(expense)
-    return expenses
+    return response.all()

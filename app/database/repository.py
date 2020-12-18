@@ -20,7 +20,7 @@ class Repository:
         self._db.close()
 
     def get(self, model):
-        response = self._db.query(model)
+        response = self._db.query(model).filter(model.deleted_at == None)
         self.close()
         return response
 

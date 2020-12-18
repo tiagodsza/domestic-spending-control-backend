@@ -51,23 +51,32 @@ class TestRepository(TestCase):
     def test_get_must_call_query_and_close(self):
         #Arrange
         db_mock = Mock()
-        db_mock.query.return_value = 'response'
+        model_mock = Mock()
+        model_mock.deleted_at = None
+        filter_mock = Mock()
+        db_mock.query = Mock(return_value=filter_mock)
+        filter_mock.filter.return_value = 'response'
         repository = Repository()
         repository.set_db(db_mock)
 
         #Action
-        response = repository.get('Model')
+        response = repository.get(model_mock)
 
         #Asserts
         self.assertEqual(response, 'response')
         db_mock_calls = db_mock.mock_calls
         self.assertEqual(len(db_mock_calls), 2)
         db_mock.assert_has_calls([
-            call.query('Model'),
+            call.query(model_mock),
             call.close()
         ])
+        filter_mock_calls =filter_mock.mock_calls
+        self.assertEqual(len(filter_mock_calls), 1)
+        filter_mock.asssert_has_calls([
+            call.filter(True)
+        ])
 
-    def test_get_by_id_mustcall_query_and_get(self):
+    def test_get_by_id_must_call_query_and_get(self):
         #Arrange
         db_mock = Mock()
         repository = Repository()

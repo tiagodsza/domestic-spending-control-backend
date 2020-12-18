@@ -29,3 +29,15 @@ class TestCategorieRoutes(TestCase):
         create_categorie_mock.assert_has_calls([
             call(request=CreateCategorieRequest(name='Food',color='Blue'))
         ])
+
+    @patch('app.routes.categorie.categorie_routes.get_categorie')
+    def test_get_categorie(self, categorie_route_mock):
+        #Arrange
+        categorie_route_mock.return_value = 'response'
+
+        #Action
+        response = client.get('/categories/')
+
+        #Asserts
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), 'response')

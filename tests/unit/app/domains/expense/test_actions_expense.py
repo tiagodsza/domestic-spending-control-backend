@@ -196,15 +196,12 @@ class TestActionsExpense(TestCase):
         #Asserts
         self.assertEqual(ex.value.status_code, 404)
 
-    @patch('app.domains.expense.actions.verify_if_exists_and_is_not_deleted')
     @patch('app.domains.expense.actions.get_repository')
     async def test_get_expenses(
             self,
             get_repository_mock,
-            verify_if_exists_and_is_not_deleted_mock,
     ):
         #Arrange
-        verify_if_exists_and_is_not_deleted_mock.side_effect = [True, True, False]
         repository_mock = Mock()
         get_repository_mock.side_effect = [repository_mock]
         response_mock = Mock()
@@ -215,7 +212,7 @@ class TestActionsExpense(TestCase):
         response = await get_expenses()
 
         #Asserts
-        self.assertEqual(response, ['item1', 'item2'])
+        self.assertEqual(response, ['item1', 'item2', 'item3'])
 
         repository_mock_calls = repository_mock.mock_calls
         self.assertEqual(len(repository_mock_calls), 1)
@@ -230,11 +227,3 @@ class TestActionsExpense(TestCase):
                 call()
             ]
         )
-
-        verify_if_exists_and_is_not_deleted_mock_calls = verify_if_exists_and_is_not_deleted_mock.mock_calls
-        self.assertEqual(len(verify_if_exists_and_is_not_deleted_mock_calls), 3)
-        verify_if_exists_and_is_not_deleted_mock.assert_has_calls([
-            call('item1'),
-            call('item2'),
-            call('item3'),
-        ])
