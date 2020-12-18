@@ -41,3 +41,18 @@ class TestCategorieRoutes(TestCase):
         #Asserts
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), 'response')
+
+    @patch('app.routes.categorie.categorie_routes.delete_categorie')
+    def test_delete_categorie(self, delete_categorie_mock):
+        #Arrange
+
+        #Action
+        response = client.delete('/categories/1')
+
+        #Asserts
+        self.assertEqual(response.status_code, 204)
+        delete_categorie_mock_calls = delete_categorie_mock.mock_calls
+        self.assertEqual(len(delete_categorie_mock_calls), 1)
+        delete_categorie_mock.assert_has_calls([
+            call('1')
+        ])
