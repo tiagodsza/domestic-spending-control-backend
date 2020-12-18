@@ -21,7 +21,7 @@ async def get():
 async def delete(id: str):
     await delete_categorie(id)
 
-@router.put('/{id}')
+@router.put('/{id}', status_code=200)
 async def put(id:str, request: CreateCategorieRequest):
     response = await update_categorie(id, request)
     return response

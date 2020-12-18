@@ -150,8 +150,8 @@ class TestActionsCategorie(TestCase):
             categorie_response_mock
     ):
         #Arrange
-        categorie_mock = Mock()
-        repository_mock = Mock()
+        categorie_mock = MagicMock()
+        repository_mock = MagicMock()
         repository_mock.get_by_id.side_effect = [categorie_mock]
         get_repository_mock.side_effect = [repository_mock]
         verify_if_exists_and_is_not_deleted_mock.return_value = True
@@ -184,11 +184,22 @@ class TestActionsCategorie(TestCase):
             call.from_domain(categorie_mock)
         ])
 
+    @patch('app.domains.categorie.actions.verify_if_exists_and_is_not_deleted')
     @patch('app.domains.categorie.actions.get_repository')
-    async def test_update_categorie_must_raise_NotFoundException_when_verification_return_false(self):
+    async def test_update_categorie_must_raise_NotFoundException_when_verification_return_false(
+            self,
+            get_repository_mock,
+            verify_if_exists_and_is_not_deleted_mock
+    ):
         #Arrange
+        repository_mock = MagicMock()
+        get_repository_mock.side_effect = [repository_mock]
+        verify_if_exists_and_is_not_deleted_mock.return_value = False
 
         #Action
-        response = await update_categorie('1', 'request')
+        with pytest.raises(NotFoundException) as ex:
+            response = await update_categorie('1', 'request')
 
         #Asserts
+        self.assertEqual(ex.value.detail, 'Not Found.')
+        self.assertEqual(ex.value.status_code, 404)

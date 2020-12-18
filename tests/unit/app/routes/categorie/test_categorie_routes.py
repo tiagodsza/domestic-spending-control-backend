@@ -56,3 +56,27 @@ class TestCategorieRoutes(TestCase):
         delete_categorie_mock.assert_has_calls([
             call('1')
         ])
+
+    @patch('app.routes.categorie.categorie_routes.update_categorie')
+    def test_put_categorie(self, update_categorie_mock):
+        #Arrange
+        update_categorie_mock.return_value = {'response':'response'}
+        data = {
+            'name':'name',
+            'color':'color'
+        }
+
+        #Action
+        response = client.put('/categories/1', json=data)
+
+        #Asserts
+        self.assertEqual(response.json(), {'response':'response'})
+        self.assertEqual(response.status_code, 200)
+        update_categorie_mock_calls =update_categorie_mock.mock_calls
+        self.assertEqual(len(update_categorie_mock_calls), 1)
+        update_categorie_mock.assert_has_calls([
+            call(
+                '1',
+                CreateCategorieRequest(name='name',color='color')
+            )
+        ])
