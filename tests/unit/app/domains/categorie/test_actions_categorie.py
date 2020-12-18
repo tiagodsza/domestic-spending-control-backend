@@ -1,7 +1,7 @@
 import pytest
 from asynctest import TestCase, patch, Mock, MagicMock, call
 
-from app.domains.categorie.actions import create_categorie, get_categorie, delete_categorie
+from app.domains.categorie.actions import create_categorie, get_categorie, delete_categorie, update_categorie
 from app.domains.categorie.models import Categorie
 from app.exceptions.exceptions import NotFoundException
 
@@ -139,3 +139,56 @@ class TestActionsCategorie(TestCase):
         #Asserts
         self.assertEqual(ex.value.detail, 'Not Found.')
         self.assertEqual(ex.value.status_code, 404)
+
+    @patch('app.domains.categorie.actions.CategorieResponse')
+    @patch('app.domains.categorie.actions.verify_if_exists_and_is_not_deleted')
+    @patch('app.domains.categorie.actions.get_repository')
+    async def test_update_categorie(
+            self,
+            get_repository_mock,
+            verify_if_exists_and_is_not_deleted_mock,
+            categorie_response_mock
+    ):
+        #Arrange
+        categorie_mock = Mock()
+        repository_mock = Mock()
+        repository_mock.get_by_id.side_effect = [categorie_mock]
+        get_repository_mock.side_effect = [repository_mock]
+        verify_if_exists_and_is_not_deleted_mock.return_value = True
+        categorie_response_mock.from_domain.return_value = 'response'
+
+        #Action
+        response = await update_categorie('1', 'request')
+
+        #Asserts
+        self.assertEqual(response,'response')
+        get_repository_mock_calls = get_repository_mock.mock_calls
+        self.assertEqual(len(get_repository_mock_calls), 1)
+        get_repository_mock.assert_has_calls([
+            call()
+        ])
+        repository_mock_calls = repository_mock.mock_calls
+        self.assertEqual(len(repository_mock_calls), 2)
+        repository_mock.assert_has_calls([
+            call.get_by_id(Categorie, '1'),
+            call.save(categorie_mock)
+        ])
+        categorie_mock_calls = categorie_mock.mock_calls
+        self.assertEqual(len(categorie_mock_calls), 1)
+        categorie_mock.assert_has_calls([
+            call.update('request')
+        ])
+        categorie_response_mock_calls = categorie_response_mock.mock_calls
+        self.assertEqual(len(categorie_response_mock_calls), 1)
+        categorie_response_mock.assert_has_calls([
+            call.from_domain(categorie_mock)
+        ])
+
+    @patch('app.domains.categorie.actions.get_repository')
+    async def test_update_categorie_must_raise_NotFoundException_when_verification_return_false(self):
+        #Arrange
+
+        #Action
+        response = await update_categorie('1', 'request')
+
+        #Asserts

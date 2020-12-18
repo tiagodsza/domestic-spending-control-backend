@@ -24,3 +24,16 @@ async def delete_categorie(id: str):
         raise NotFoundException()
     categorie.delete()
     repository.save(categorie)
+
+async def update_categorie(
+        id: str,
+        request: CreateCategorieRequest
+):
+    repository = await get_repository()
+    categorie  = repository.get_by_id(Categoriqe, id)
+    if not verify_if_exists_and_is_not_deleted(categorie):
+        raise NotFoundException()
+    categorie.update(request)
+    repository.save(categorie)
+    response = CategorieResponse.from_domain(categorie)
+    return response
