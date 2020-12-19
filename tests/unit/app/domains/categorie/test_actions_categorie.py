@@ -1,7 +1,8 @@
 import pytest
 from asynctest import TestCase, patch, Mock, MagicMock, call
 
-from app.domains.categorie.actions import create_categorie, get_categorie, delete_categorie, update_categorie
+from app.domains.categorie.actions import create_categorie, get_categorie, delete_categorie, update_categorie, \
+    get_categorie_by_id
 from app.domains.categorie.models import Categorie
 from app.exceptions.exceptions import NotFoundException
 
@@ -14,17 +15,17 @@ class TestActionsCategorie(TestCase):
             get_repository_mock,
             categorie_response_mock,
     ):
-        #Arrange
+        # Arrange
         repository_mock = MagicMock()
         request_mock = MagicMock()
         request_mock.to_domain.return_value = 'categorie'
         categorie_response_mock.from_domain.return_value = 'response'
         get_repository_mock.side_effect = [repository_mock]
 
-        #Action
+        # Action
         response = await create_categorie(request_mock)
 
-        #Asserts
+        # Asserts
         self.assertEqual(response, 'response')
         get_repository_mock_calls = get_repository_mock.mock_calls
         self.assertEqual(len(get_repository_mock_calls), 1)
@@ -52,24 +53,23 @@ class TestActionsCategorie(TestCase):
             self,
             get_repository_mock
     ):
-        #Arrange
+        # Arrange
         respository_mock = Mock()
         response_mock = Mock()
         respository_mock.get.side_effect = [response_mock]
         get_repository_mock.side_effect = [respository_mock]
 
-
-        #Action
+        # Action
         response = await get_categorie()
 
-        #Asserts
+        # Asserts
         response_mock_calls = response_mock.mock_calls
-        self.assertEqual(len(response_mock_calls),1)
+        self.assertEqual(len(response_mock_calls), 1)
         response_mock.assert_has_calls([
             call.all()
         ])
         self.assertEqual(response, response_mock.all())
-        get_repository_mock_calls =get_repository_mock.mock_calls
+        get_repository_mock_calls = get_repository_mock.mock_calls
         self.assertEqual(len(get_repository_mock_calls), 1)
         get_repository_mock.assert_has_calls([
             call()
@@ -80,6 +80,63 @@ class TestActionsCategorie(TestCase):
             call.get(Categorie)
         ])
 
+    @patch('app.domains.categorie.actions.CategorieResponse')
+    @patch('app.domains.categorie.actions.verify_if_exists_and_is_not_deleted')
+    @patch('app.domains.categorie.actions.get_repository')
+    async def test_get_categorie_by_id(
+            self,
+            get_repository_mock,
+            verify_if_exists_and_is_not_deleted_mock,
+            categorie_response_mock,
+    ):
+        # Arrange
+        repository_mock = Mock()
+        repository_mock.get_by_id.return_value = 'categorie'
+        get_repository_mock.side_effect = [repository_mock]
+        verify_if_exists_and_is_not_deleted_mock.return_value = True
+        categorie_response_mock.from_domain.return_value = 'response'
+
+        # Action
+        response = await get_categorie_by_id('1')
+
+        # Asserts
+        self.assertEqual(response, 'response')
+        get_repository_mock_calls = get_repository_mock.mock_calls
+        self.assertEqual(len(get_repository_mock_calls), 1)
+        get_repository_mock.assert_has_calls([
+            call()
+        ])
+        repository_mock_calls = repository_mock.mock_calls
+        self.assertEqual(len(repository_mock_calls), 1)
+        repository_mock.assert_has_calls([
+            call.get_by_id(Categorie, '1')
+        ])
+        verify_if_exists_and_is_not_deleted_mock_calls = verify_if_exists_and_is_not_deleted_mock.mock_calls
+        self.assertEqual(len(verify_if_exists_and_is_not_deleted_mock_calls), 1)
+        verify_if_exists_and_is_not_deleted_mock.assert_has_calls([
+            call('categorie')
+        ])
+
+    @patch('app.domains.categorie.actions.verify_if_exists_and_is_not_deleted')
+    @patch('app.domains.categorie.actions.get_repository')
+    async def test_get_categorie_by_id_must_raise_NotFoundException_when_the_repository_returns_nothing(
+            self,
+            get_repository_mock,
+            verify_if_exists_and_is_not_deleted_mock
+    ):
+        # Arrange
+        repository_mock = Mock()
+        get_repository_mock.side_effect = [repository_mock]
+        verify_if_exists_and_is_not_deleted_mock.return_value = False
+
+        # Action
+        with pytest.raises(NotFoundException) as ex:
+            response = await get_categorie_by_id('1')
+
+        # Asserts
+        self.assertEqual(ex.value.detail, 'Not Found.')
+        self.assertEqual(ex.value.status_code, 404)
+
     @patch('app.domains.categorie.actions.verify_if_exists_and_is_not_deleted')
     @patch('app.domains.categorie.actions.get_repository')
     async def test_delete_categorie(
@@ -87,24 +144,24 @@ class TestActionsCategorie(TestCase):
             get_repository_mock,
             verify_if_exists_and_is_not_deleted_mock
     ):
-        #Arrange
+        # Arrange
         categorie_mock = Mock()
         repository_mock = Mock()
         repository_mock.get_by_id.side_effect = [categorie_mock]
         get_repository_mock.side_effect = [repository_mock]
         verify_if_exists_and_is_not_deleted_mock.return_value = True
 
-        #Action
+        # Action
         await delete_categorie('1')
 
-        #Asserts
+        # Asserts
         get_repository_mock_calls = get_repository_mock.mock_calls
         self.assertEqual(len(get_repository_mock_calls), 1)
         get_repository_mock.assert_has_calls([
             call()
         ])
         repository_mock_calls = repository_mock.mock_calls
-        self.assertEqual(len(repository_mock_calls),2)
+        self.assertEqual(len(repository_mock_calls), 2)
         repository_mock.assert_has_calls([
             call.get_by_id(Categorie, '1'),
             call.save(categorie_mock)
@@ -127,16 +184,16 @@ class TestActionsCategorie(TestCase):
             get_repository_mock,
             verify_if_exists_and_is_not_deleted_mock
     ):
-        #Arrange
+        # Arrange
         repository_mock = Mock()
         get_repository_mock.side_effect = [repository_mock]
         verify_if_exists_and_is_not_deleted_mock.return_value = False
 
-        #Action
+        # Action
         with pytest.raises(NotFoundException) as ex:
             await delete_categorie('1')
 
-        #Asserts
+        # Asserts
         self.assertEqual(ex.value.detail, 'Not Found.')
         self.assertEqual(ex.value.status_code, 404)
 
@@ -149,7 +206,7 @@ class TestActionsCategorie(TestCase):
             verify_if_exists_and_is_not_deleted_mock,
             categorie_response_mock
     ):
-        #Arrange
+        # Arrange
         categorie_mock = MagicMock()
         repository_mock = MagicMock()
         repository_mock.get_by_id.side_effect = [categorie_mock]
@@ -157,11 +214,11 @@ class TestActionsCategorie(TestCase):
         verify_if_exists_and_is_not_deleted_mock.return_value = True
         categorie_response_mock.from_domain.return_value = 'response'
 
-        #Action
+        # Action
         response = await update_categorie('1', 'request')
 
-        #Asserts
-        self.assertEqual(response,'response')
+        # Asserts
+        self.assertEqual(response, 'response')
         get_repository_mock_calls = get_repository_mock.mock_calls
         self.assertEqual(len(get_repository_mock_calls), 1)
         get_repository_mock.assert_has_calls([
@@ -191,15 +248,15 @@ class TestActionsCategorie(TestCase):
             get_repository_mock,
             verify_if_exists_and_is_not_deleted_mock
     ):
-        #Arrange
+        # Arrange
         repository_mock = MagicMock()
         get_repository_mock.side_effect = [repository_mock]
         verify_if_exists_and_is_not_deleted_mock.return_value = False
 
-        #Action
+        # Action
         with pytest.raises(NotFoundException) as ex:
             response = await update_categorie('1', 'request')
 
-        #Asserts
+        # Asserts
         self.assertEqual(ex.value.detail, 'Not Found.')
         self.assertEqual(ex.value.status_code, 404)

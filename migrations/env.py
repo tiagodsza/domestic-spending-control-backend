@@ -8,11 +8,11 @@ from alembic import context
 import os
 import sys
 
+sys.path.append(os.getcwd())
 
 from app.database import DeclarativeBase
 from config import URL_DB
 
-sys.path.append(os.getcwd())
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

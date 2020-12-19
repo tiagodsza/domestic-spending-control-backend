@@ -11,12 +11,15 @@ async def get_categorie():
     response = repository.get(Categorie)
     return response.all()
 
+
 async def get_categorie_by_id(id: str):
     repository = await get_repository()
     categorie = repository.get_by_id(Categorie, id)
     if not verify_if_exists_and_is_not_deleted(categorie):
         raise NotFoundException()
-    return categorie
+    response = CategorieResponse.from_domain(categorie)
+    return response
+
 
 async def create_categorie(request: CreateCategorieRequest):
     repository = await get_repository()
