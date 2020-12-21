@@ -128,3 +128,5 @@ dmypy.json
 
 # Pyre categorie checker
 .pyre/
+
+.idea/
