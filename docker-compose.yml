@@ -1,0 +1,9 @@
+version: '3'
+services:
+  api-backend:
+      build: .
+      container_name: "domestic-spending-control"
+      ports:
+        - "5000:3000"
+      volumes:
+        - .:/app
