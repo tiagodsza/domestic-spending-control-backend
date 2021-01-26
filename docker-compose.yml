@@ -1,5 +1,14 @@
 version: '3'
 services:
+  database:
+    image: postgres
+    container_name: dsc-db
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
+      POSTGRES_DB: controle_gastos
+    ports:
+      - "5432:5432"
   api-backend:
       build: .
       container_name: "domestic-spending-control"
